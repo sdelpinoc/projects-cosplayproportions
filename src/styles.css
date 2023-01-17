@@ -1,0 +1,24 @@
+.container-canvas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: crosshair;
+}
+
+canvas {
+    display: block;
+    border: 1px solid red;
+}
+
+input[type=file] {
+    padding: .5em 0;
+}
+
+table thead tr th {
+    width: 25%;
+}
+
+table tbody tr td img {
+    width: 24px;
+    cursor: pointer;
+}
