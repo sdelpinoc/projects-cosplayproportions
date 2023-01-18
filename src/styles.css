@@ -1,13 +1,39 @@
+canvas {
+    display: block;
+    border: 1px solid red;
+}
+
+#root {
+    display: grid;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+}
+
 .container-canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 450px;
     cursor: crosshair;
 }
 
-canvas {
-    display: block;
-    border: 1px solid red;
+.container-lines {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.container-lines>* {
+    flex: 1 1 auto;
+}
+
+.contain-table {
+    height: 350px;
+    overflow-y: auto;
 }
 
 input[type=file] {
@@ -21,4 +47,10 @@ table thead tr th {
 table tbody tr td img {
     width: 24px;
     cursor: pointer;
+}
+
+@media screen and (min-width: 600px) {
+    .contain-table {
+        width: fit-content;
+    }
 }

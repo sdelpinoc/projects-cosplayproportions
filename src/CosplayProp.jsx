@@ -1,123 +1,165 @@
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 
 import { imageLoader } from './helpers/imageLoader';
-import { useCanvas } from './hooks/useCanvas';
+import { useForm } from './hooks/useForm';
 
 import TableLines from './components/TableLines';
+import Canvas from './components/Canvas';
+import Form from './components/Form';
 
-function CosplayProp() {
+export default function CosplayProp() {
 
-    const ref = useRef();
+    const initialLine = {
+        'startPosition': {
+            'x': 0,
+            'y': 0
+        },
+        'lineCoordinates': {
+            'x': 0,
+            'y': 0
+        },
+        'color': '#000000',
+        'distance': 0
+    };
 
-    const {
-        imageFile, lineName, lineLength, lines, baseLine, errors,
-        initCanvas, setImageFile, setBaseLine, setLineName, setLineLength, addNewLine, setErrors, setLines,
-        clearCanvas, drawStoredLines
-    } = useCanvas();
+    const initialForm = { name: 'Base', length: 0, color: '#000000' };
+
+    const { name, length, color, onInputChange, onResetForm } = useForm(initialForm);
+
+    const [imageFile, setImageFile] = useState(null);
+    const [newLine, setNewLine] = useState(initialLine);
+    const [lines, setLines] = useState([]);
+    const [baseLine, setBaseLine] = useState(false);
+    const [errors, setErrors] = useState([]);
 
     const handleImageUpload = () => {
         imageLoader(imageFile, document.querySelector('.container-canvas'));
+        setLines([]);
+        setNewLine(initialLine);
+        setBaseLine(false);
+        onResetForm(initialForm);
     };
 
     const handleSelectImage = e => {
         setImageFile(e.target.files[0]);
     };
 
-    const handleAddNewLine = (e) => {
-        e.preventDefault();
-        console.log({ lineName });
-        console.log({ lineLength });
+    const addNewLine = (lineName, lineLength) => {
+        // console.log('newLine.distance: ', newLine.distance);
 
-        setErrors([]);
+        // Validations
+        if (lineName === '' || (newLine.distance === 0 || newLine.distance === undefined)) {
+            setErrors(['Missing to add the name or draw the line']);
+            return;
+        }
 
-        if (!lineName.length > 0 || lineLength == 0) return;
+        if (lineLength === 0 || lineLength === '' || lineLength === null || isNaN(lineLength)) {
+            setErrors(['Missing length(Cm)']);
+            return;
+        }
+        // console.log({ lines });
+        const checkLine = lines.find(line => line.name.toLowerCase() === lineName.toLowerCase());
 
-        addNewLine(lineName, lineLength);
+        if (baseLine && checkLine) {
+            setErrors(['Line with the same name']);
+            return;
+        }
+
+        let newLineName = lineName;
+        let newLineLength = lineLength;
+
+        // console.log({ newLine });
+        const { startPosition, lineCoordinates, color, distance } = newLine;
+
+        if (!baseLine) {
+            newLineName = 'Base';
+            setBaseLine(true);
+        } else {
+            // We must calculate the distance according to the pixels of the line and the distance in cm from the baseline
+            const { lengthInCM, lengthInPixels } = lines.filter(line => line.isBaseLine === true)[0];
+
+            newLineLength = Math.round((lengthInCM * distance) / Math.round(lengthInPixels, 2), 2);
+        }
+
+        let newLineToAdd = {
+            id: Date.now(),
+            name: newLineName,
+            lengthInCM: newLineLength,
+            startPosition: startPosition,
+            finalPosition: lineCoordinates,
+            color: color,
+            lengthInPixels: distance,
+            isBaseLine: !baseLine
+        };
+
+        setLines([...lines, newLineToAdd]);
+        setNewLine(initialLine);
+        // setLineName('');
     };
 
-    useEffect(() => {
-        initCanvas(ref.current, lines.length);
-        // initCanvas(document.querySelector('canvas'), lines.length);
-    }, [imageFile, lines]);
+    const handleAddNewLine = (e) => {
+        e.preventDefault();
+        setErrors([]);
 
-    useEffect(() => {
-        setLines([]);
-        setBaseLine(false);
-        setLineLength(0);
-        clearCanvas();
-    }, [imageFile]);
+        if (!imageFile) {
+            setErrors(['You need to upload a image']);
+            return;
+        };
 
-    useEffect(() => {
-        if (lines.length === 0) {
-            setBaseLine(false);
-            setLineName('Base');
-            setLineLength(0);
+        if (!name.length > 0 || length === 0) {
+            setErrors(['It remains to add the centimeters or draw the line']);
+            return;
         }
-    }, [lines]);
+
+        addNewLine(name, length);
+    };
+
+    const handleDeleteLine = id => {
+        // console.log({ id });
+        const newLines = lines.filter(line => line.id !== id);
+        console.log({ newLines });
+
+        setLines(newLines);
+
+        if (newLines.length === 0) {
+            setNewLine(initialLine);
+            setBaseLine(false);
+            onResetForm(initialForm);
+        };
+    };
 
     return (
         <div className="container">
             <h1 className="text-center">Cosplay Proportions</h1>
-            <div className="flex-row justify-center">
-                <div className="flex-large three-fourths container-canvas">
-                    <canvas
-                        ref={ref}
-                        width="500"
-                        height="600"
-                    ></canvas>
+            <div>
+                <div className="container-canvas">
+                    <Canvas imageFile={imageFile} newLine={newLine} lines={lines} setNewLine={setNewLine} color={color} />
                 </div>
-                <div className="flex-small one-fourths">
-                    <input
-                        type="file"
-                        name="imagen"
-                        onChange={handleSelectImage}
-                    />
-                    <button
-                        name="imageFile"
-                        className="full-button"
-                        onClick={handleImageUpload}>Upload image
-                    </button>
-                    <form>
-                        <label htmlFor="name">Name</label>
+                <div className="container-lines">
+                    <div>
                         <input
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            value={lineName}
-                            onChange={(e) => { setLineName(e.target.value) }}
-                            readOnly={!baseLine}
+                            type="file"
+                            name="image"
+                            onChange={handleSelectImage}
                         />
-                        {
-                            !baseLine ? (
-                                <>
-                                    <label htmlFor="name">Cm</label>
-                                    <input
-                                        type="text"
-                                        name="lineLength"
-                                        placeholder="100"
-                                        value={lineLength}
-                                        onChange={(e) => { setLineLength(e.target.value) }}
-                                    />
-                                </>
-                            ) : <></>
-                        }
                         <button
+                            name="imageFile"
                             className="full-button"
-                            onClick={handleAddNewLine}
-                        >Add line</button>
-                        <div style={{ color: 'red' }}>
-                            {
-                                errors.map((error, index) => (
-                                    <p key={index}>{error}</p>
-                                ))
-                            }
-                        </div>
-                    </form>
-                    <TableLines lines={lines} setLines={setLines} drawStoredLines={drawStoredLines} />
+                            onClick={handleImageUpload}>Upload image
+                        </button>
+                        <Form 
+                            name={name}
+                            length={length}
+                            color={color}
+                            onInputChange={onInputChange}
+                            baseLine={baseLine}
+                            handleAddNewLine={handleAddNewLine}
+                            errors={errors}
+                        />
+                    </div>
+                    <TableLines lines={lines} handleDeleteLine={handleDeleteLine} />
                 </div>
             </div>
         </div>
     )
 }
-
-export default CosplayProp;
