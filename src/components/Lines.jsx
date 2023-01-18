@@ -4,7 +4,7 @@ export default function Lines(props) {
 
     const showDelete = () => {
         return (lines.length === 1) || (lines.length > 1 && name !== 'Base')
-            ? <img onClick={() => handleDeleteLine(id)} src="./src/assets/images/delete.png" alt={`Delete ${name} line`} title={`Delete ${name} line`} />
+            ? <img onClick={() => handleDeleteLine(id)} src="./images/delete.png" alt={`Delete ${name} line`} title={`Delete ${name} line`} />
             : <></>
     }
 
