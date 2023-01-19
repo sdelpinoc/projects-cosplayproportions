@@ -1,4 +1,4 @@
-import Lines from './Lines'
+import Lines from './Lines';
 
 export default function TableLines({ lines, handleDeleteLine }) {
     return (

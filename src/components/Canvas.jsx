@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import { useCanvas } from '../hooks/useCanvas';
 
 export default function Canvas({ imageFile, newLine, setNewLine, lines, color }) {
-    const { initCanvas } = useCanvas({ imageFile, newLine, setNewLine, lines, color });
+    const { init } = useCanvas({ imageFile, newLine, setNewLine, lines, color });
 
     const canvasRef = useRef(null);
 
@@ -10,8 +10,8 @@ export default function Canvas({ imageFile, newLine, setNewLine, lines, color })
         const canvas = canvasRef.current;
         // const context = canvas.getContext('2d');
 
-        initCanvas(canvas, color);
-    }, [initCanvas, color]);
+        init(canvas, color);
+    }, [init, color]);
 
     return (
         <canvas ref={canvasRef}></canvas>

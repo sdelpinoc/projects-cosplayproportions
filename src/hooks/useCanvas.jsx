@@ -7,7 +7,7 @@ export const useCanvas = props => {
 
     let isDrawStart = false;
 
-    const initCanvas = (canvas, color) => {
+    const init = (canvas, color) => {
         const ctx = canvas.getContext('2d');
 
         canvas.addEventListener('mousedown', event => {
@@ -170,6 +170,6 @@ export const useCanvas = props => {
     }
 
     return {
-        initCanvas
+        init
     }
 }

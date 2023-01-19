@@ -7,22 +7,21 @@ import TableLines from './components/TableLines';
 import Canvas from './components/Canvas';
 import Form from './components/Form';
 
+const initialForm = { name: 'Base', length: 0, color: '#000000' };
+const initialLine = {
+    'startPosition': {
+        'x': 0,
+        'y': 0
+    },
+    'lineCoordinates': {
+        'x': 0,
+        'y': 0
+    },
+    'color': '#000000',
+    'distance': 0
+};
+
 export default function CosplayProp() {
-
-    const initialLine = {
-        'startPosition': {
-            'x': 0,
-            'y': 0
-        },
-        'lineCoordinates': {
-            'x': 0,
-            'y': 0
-        },
-        'color': '#000000',
-        'distance': 0
-    };
-
-    const initialForm = { name: 'Base', length: 0, color: '#000000' };
 
     const { name, length, color, onInputChange, onResetForm } = useForm(initialForm);
 
@@ -33,6 +32,13 @@ export default function CosplayProp() {
     const [errors, setErrors] = useState([]);
 
     const handleImageUpload = () => {
+        setErrors([]);
+
+        if (!imageFile) {
+            setErrors(['You need to upload a image']);
+            return;
+        };
+
         imageLoader(imageFile, document.querySelector('.container-canvas'));
         setLines([]);
         setNewLine(initialLine);
@@ -115,7 +121,6 @@ export default function CosplayProp() {
     };
 
     const handleDeleteLine = id => {
-        // console.log({ id });
         const newLines = lines.filter(line => line.id !== id);
         console.log({ newLines });
 
@@ -147,7 +152,7 @@ export default function CosplayProp() {
                             className="full-button"
                             onClick={handleImageUpload}>Upload image
                         </button>
-                        <Form 
+                        <Form
                             name={name}
                             length={length}
                             color={color}
