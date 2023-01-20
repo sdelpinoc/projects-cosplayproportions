@@ -1,5 +1,4 @@
 export const useCanvas = props => {
-    console.log('-useCanvasTemp- props: ', { props });
     const { imageFile, newLine, setNewLine, lines } = props;
 
     let initialStartPosition = { x: 0, y: 0 };
@@ -60,7 +59,6 @@ export const useCanvas = props => {
     };
 
     const mouseDownListener = (event, canvas) => {
-        // console.log('mouseDownListener -> imageFile: ',imageFile);
         if (imageFile) {
             initialStartPosition = getClientOffset(event, canvas);
             isDrawStart = true;
@@ -79,7 +77,6 @@ export const useCanvas = props => {
     };
 
     const mouseMoveListener = (event, canvas, color) => {
-        // console.log('mouseMoveListener -> imageFile: ', imageFile);
         if (imageFile) {
             if (!isDrawStart) return;
 
@@ -90,7 +87,6 @@ export const useCanvas = props => {
     };
 
     const mouseupListener = color => {
-        // console.log('mouseupListener -> imageFile: ', imageFile);
         if (imageFile) {
             isDrawStart = false;
 
@@ -136,7 +132,6 @@ export const useCanvas = props => {
     };
 
     const drawLine = (canvas, color) => {
-        // console.log('drawLine -> imageFile: ', imageFile);
         const ctx = canvas.getContext('2d');
 
         if (imageFile) {

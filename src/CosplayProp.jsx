@@ -51,8 +51,6 @@ export default function CosplayProp() {
     };
 
     const addNewLine = (lineName, lineLength) => {
-        // console.log('newLine.distance: ', newLine.distance);
-
         // Validations
         if (lineName === '' || (newLine.distance === 0 || newLine.distance === undefined)) {
             setErrors(['Missing to add the name or draw the line']);
@@ -63,7 +61,7 @@ export default function CosplayProp() {
             setErrors(['Missing length(Cm)']);
             return;
         }
-        // console.log({ lines });
+
         const checkLine = lines.find(line => line.name.toLowerCase() === lineName.toLowerCase());
 
         if (baseLine && checkLine) {
@@ -74,7 +72,6 @@ export default function CosplayProp() {
         let newLineName = lineName;
         let newLineLength = lineLength;
 
-        // console.log({ newLine });
         const { startPosition, lineCoordinates, color, distance } = newLine;
 
         if (!baseLine) {
@@ -100,7 +97,6 @@ export default function CosplayProp() {
 
         setLines([...lines, newLineToAdd]);
         setNewLine(initialLine);
-        // setLineName('');
     };
 
     const handleAddNewLine = (e) => {
@@ -122,7 +118,6 @@ export default function CosplayProp() {
 
     const handleDeleteLine = id => {
         const newLines = lines.filter(line => line.id !== id);
-        console.log({ newLines });
 
         setLines(newLines);
 
@@ -138,7 +133,13 @@ export default function CosplayProp() {
             <h1 className="text-center">Cosplay Proportions</h1>
             <div>
                 <div className="container-canvas">
-                    <Canvas imageFile={imageFile} newLine={newLine} lines={lines} setNewLine={setNewLine} color={color} />
+                    <Canvas
+                        imageFile={imageFile}
+                        newLine={newLine}
+                        lines={lines}
+                        setNewLine={setNewLine}
+                        color={color}
+                    />
                 </div>
                 <div className="container-lines">
                     <div>
