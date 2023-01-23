@@ -96,19 +96,19 @@ export const useCanvas = props => {
             var distanceInPixels = Math.sqrt(a * a + b * b);
 
             // Only to check the object
-            const tempLine = {
-                'startPosition': {
-                    'x': initialStartPosition.x,
-                    'y': initialStartPosition.y
-                },
-                'lineCoordinates': {
-                    'x': lineCoordinates.x,
-                    'y': lineCoordinates.y
-                },
-                'color': color,
-                'distance': distanceInPixels
-            };
-            console.log({ tempLine });
+            // const tempLine = {
+            //     'startPosition': {
+            //         'x': initialStartPosition.x,
+            //         'y': initialStartPosition.y
+            //     },
+            //     'lineCoordinates': {
+            //         'x': lineCoordinates.x,
+            //         'y': lineCoordinates.y
+            //     },
+            //     'color': color,
+            //     'distance': distanceInPixels
+            // };
+            // console.log({ tempLine });
 
             // We save the coordinates of the new line, along with its color and distance in pixels
             setNewLine({

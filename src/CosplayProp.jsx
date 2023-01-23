@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { imageLoader } from './helpers/imageLoader';
 import { useForm } from './hooks/useForm';
+import { useImage } from './hooks/useImage';
 
 import TableLines from './components/TableLines';
 import Canvas from './components/Canvas';
@@ -22,16 +22,15 @@ const initialLine = {
 };
 
 export default function CosplayProp() {
-
     const { name, length, color, onInputChange, onResetForm } = useForm(initialForm);
+    const { imageFile, settingImage, uploadImage } = useImage();
 
-    const [imageFile, setImageFile] = useState(null);
     const [newLine, setNewLine] = useState(initialLine);
     const [lines, setLines] = useState([]);
     const [baseLine, setBaseLine] = useState(false);
     const [errors, setErrors] = useState([]);
 
-    const handleImageUpload = () => {
+    const handleImageUpload = (imageFile, container) => {
         setErrors([]);
 
         if (!imageFile) {
@@ -39,16 +38,12 @@ export default function CosplayProp() {
             return;
         };
 
-        imageLoader(imageFile, document.querySelector('.container-canvas'));
+        uploadImage(imageFile, container);
         setLines([]);
         setNewLine(initialLine);
         setBaseLine(false);
         onResetForm(initialForm);
-    };
-
-    const handleSelectImage = e => {
-        setImageFile(e.target.files[0]);
-    };
+    }
 
     const addNewLine = (lineName, lineLength) => {
         // Validations
@@ -146,12 +141,13 @@ export default function CosplayProp() {
                         <input
                             type="file"
                             name="image"
-                            onChange={handleSelectImage}
+                            onChange={e => settingImage(e.target.files[0])}
+                            aria-label="image"
                         />
                         <button
                             name="imageFile"
                             className="full-button"
-                            onClick={handleImageUpload}>Upload image
+                            onClick={() => handleImageUpload(imageFile, document.querySelector('.container-canvas'))}>Upload image
                         </button>
                         <Form
                             name={name}

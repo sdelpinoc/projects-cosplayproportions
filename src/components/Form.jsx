@@ -11,6 +11,7 @@ export default function Form(props) {
                 value={name}
                 onChange={e => { onInputChange(e) }}
                 readOnly={!baseLine}
+                aria-label="name"
             />
             {
                 (!baseLine) ? (
@@ -22,6 +23,7 @@ export default function Form(props) {
                             placeholder="100"
                             value={length}
                             onChange={e => { onInputChange(e) }}
+                            aria-label="length"
                         />
                     </>
                 ) : <></>
