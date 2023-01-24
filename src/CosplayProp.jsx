@@ -30,6 +30,13 @@ export default function CosplayProp() {
     const [baseLine, setBaseLine] = useState(false);
     const [errors, setErrors] = useState([]);
 
+    const handleChangeFile = e => {
+        setErrors([]);
+        if (!settingImage(e.target.files[0])) {
+            setErrors(['Must upload a image'])
+        }
+    };
+
     const handleImageUpload = (imageFile, container) => {
         setErrors([]);
 
@@ -43,7 +50,36 @@ export default function CosplayProp() {
         setNewLine(initialLine);
         setBaseLine(false);
         onResetForm(initialForm);
-    }
+    };
+
+    const handleAddNewLine = (e) => {
+        e.preventDefault();
+        setErrors([]);
+
+        if (!imageFile) {
+            setErrors(['You need to upload a image']);
+            return;
+        };
+
+        if (!name.length > 0 || length === 0) {
+            setErrors(['It remains to add the centimeters or draw the line']);
+            return;
+        }
+
+        addNewLine(name, length);
+    };
+
+    const handleDeleteLine = id => {
+        const newLines = lines.filter(line => line.id !== id);
+
+        setLines(newLines);
+
+        if (newLines.length === 0) {
+            setNewLine(initialLine);
+            setBaseLine(false);
+            onResetForm(initialForm);
+        };
+    };
 
     const addNewLine = (lineName, lineLength) => {
         // Validations
@@ -94,35 +130,6 @@ export default function CosplayProp() {
         setNewLine(initialLine);
     };
 
-    const handleAddNewLine = (e) => {
-        e.preventDefault();
-        setErrors([]);
-
-        if (!imageFile) {
-            setErrors(['You need to upload a image']);
-            return;
-        };
-
-        if (!name.length > 0 || length === 0) {
-            setErrors(['It remains to add the centimeters or draw the line']);
-            return;
-        }
-
-        addNewLine(name, length);
-    };
-
-    const handleDeleteLine = id => {
-        const newLines = lines.filter(line => line.id !== id);
-
-        setLines(newLines);
-
-        if (newLines.length === 0) {
-            setNewLine(initialLine);
-            setBaseLine(false);
-            onResetForm(initialForm);
-        };
-    };
-
     return (
         <div className="container">
             <h1 className="text-center">Cosplay Proportions</h1>
@@ -141,7 +148,7 @@ export default function CosplayProp() {
                         <input
                             type="file"
                             name="image"
-                            onChange={e => settingImage(e.target.files[0])}
+                            onChange={handleChangeFile}
                             aria-label="image"
                         />
                         <button

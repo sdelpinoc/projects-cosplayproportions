@@ -1,62 +1,8 @@
-export const useCanvas = props => {
-    const { imageFile, newLine, setNewLine, lines } = props;
-
+export const useCanvas = ({ imageFile, setNewLine, lines }) => {
     let initialStartPosition = { x: 0, y: 0 };
     let lineCoordinates = { x: 0, y: 0 };
 
     let isDrawStart = false;
-
-    const init = (canvas, color) => {
-        const ctx = canvas.getContext('2d');
-
-        canvas.addEventListener('mousedown', event => {
-            mouseDownListener(event, canvas);
-        });
-        canvas.addEventListener('mousemove', event => {
-            mouseMoveListener(event, canvas, color);
-        });
-        canvas.addEventListener('mouseup', () => {
-            mouseupListener(color);
-        });
-
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-
-        clearCanvas(canvas);
-
-        if (newLine && newLine.distance > 0) {
-            const { startPosition, lineCoordinates, color } = newLine;
-
-            ctx.beginPath();
-
-            ctx.moveTo(startPosition.x, startPosition.y);
-            ctx.lineTo(lineCoordinates.x, lineCoordinates.y);
-
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-        }
-
-        // Draw the stored lines
-        if (lines && lines.length > 0) {
-            lines.forEach(line => {
-                const { startPosition, finalPosition, color } = line;
-
-                ctx.beginPath();
-
-                ctx.moveTo(startPosition.x, startPosition.y);
-                ctx.lineTo(finalPosition.x, finalPosition.y);
-
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 3;
-                ctx.lineCap = 'round';
-                ctx.stroke();
-            });
-        }
-    };
 
     const mouseDownListener = (event, canvas) => {
         if (imageFile) {
@@ -165,6 +111,9 @@ export const useCanvas = props => {
     }
 
     return {
-        init
+        mouseDownListener,
+        mouseMoveListener,
+        mouseupListener,
+        clearCanvas
     }
 }

@@ -6,6 +6,7 @@ export const useImage = () => {
     const [imageFile, setImageFile] = useState(null);
 
     const settingImage = file => {
+        if (!['image/png', 'image/jpeg'].includes(file.type)) return false;
         setImageFile(file);
     };
 
